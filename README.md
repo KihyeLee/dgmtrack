@@ -51,6 +51,20 @@ The absolute numbers behind those differences:
 The oracle injects the ground-truth velocity through the same measurement path and bounds
 what any velocity source can give this pipeline; the policy recovers 28–30% of that headroom.
 
+The validation split was also used to design the policy, so the same two Poly-MOT
+configurations were submitted once to the official nuScenes **test** server, a split this work
+never looked at, with every parameter left at its validation value:
+
+| nuScenes test split, official server | AMOTA ↑ | AMOTP ↓ | MOTA ↑ | RECALL ↑ |
+|---|---:|---:|---:|---:|
+| velocity removed | 0.6524 | 0.5766 | 0.5449 | 0.6935 |
+| **velocity removed + proposed** | **0.6614** | 0.5798 | **0.5532** | **0.6970** |
+| difference | **+0.0090** | +0.0032 | +0.0083 | +0.0035 |
+
+The difference is the same direction as validation (+0.0057 for that pair) and does not shrink.
+The server returns totals only, so no interval can be computed on this split; it confirms the
+validation control rather than replacing it.
+
 On KITTI, whose detectors report no velocity at all, the detections were regenerated from
 three released OpenPCDet checkpoints spanning Car AP@R11 78.70 to 84.54, with every tracker
 parameter left at its nuScenes value:

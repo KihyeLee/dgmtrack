@@ -1,0 +1,59 @@
+{
+  "server": "huggingface.co/spaces/nuscenes/nuscenes-tracking-challenge",
+  "split": "test",
+  "submitted_utc": "2026-09-28",
+  "runs": {
+    "polymot_grid_age2": {
+      "config": "VoxelNeXt detections, no detector velocity, Poly-MOT + proposed policy",
+      "AMOTA": 0.6614,
+      "AMOTP": 0.5798,
+      "RECALL": 0.697,
+      "MOTAR": 0.8052,
+      "MOTA": 0.5532,
+      "MOTP": 0.3304,
+      "GT": 17081,
+      "MT": 5413,
+      "ML": 1873,
+      "FAF": 55.8107,
+      "TP": 95056,
+      "FP": 17903,
+      "FN": 23987,
+      "IDS": 522,
+      "FRAG": 430,
+      "TID": 0.4777,
+      "LGD": 0.6725
+    },
+    "polymot_novelo": {
+      "config": "VoxelNeXt detections, no detector velocity, Poly-MOT, no grid velocity (ablation)",
+      "AMOTA": 0.6524,
+      "AMOTP": 0.5766,
+      "RECALL": 0.6935,
+      "MOTAR": 0.8002,
+      "MOTA": 0.5449,
+      "MOTP": 0.3257,
+      "GT": 17081,
+      "MT": 5439,
+      "ML": 1874,
+      "FAF": 56.4403,
+      "TP": 95030,
+      "FP": 18059,
+      "eval_wall_clock": "74m 47s",
+      "not_read": [
+        "FN",
+        "IDS",
+        "FRAG",
+        "TID",
+        "LGD"
+      ],
+      "note": "Metrics below the visible panel were not recorded; they are left blank in the paper."
+    }
+  },
+  "difference_proposed_minus_ablation": {
+    "AMOTA": 0.009,
+    "AMOTP": 0.0032,
+    "MOTA": 0.0083,
+    "RECALL": 0.0035,
+    "MOTAR": 0.005,
+    "note": "The test server returns totals only, so no interval can be computed on this split."
+  }
+}
