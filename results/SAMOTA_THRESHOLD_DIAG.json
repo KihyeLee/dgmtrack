@@ -1,0 +1,222 @@
+{
+  "note": "Where the KITTI sAMOTA difference between detectors actually comes from.",
+  "n_thresholds": 40,
+  "arms": {
+    "PointRCNN (AB3DMOT-released), thr 0.30": {
+      "base_run": "k5_none",
+      "compare_run": "k5_abl_age",
+      "samota_published": {
+        "none": 0.8611049999999999,
+        "policy": 0.901145,
+        "diff": 0.040040000000000076
+      },
+      "samota_excluding_two_lowest": {
+        "none": 0.8537947368421053,
+        "policy": 0.8959421052631577,
+        "diff": 0.04214736842105238
+      },
+      "thresholds_reached": {
+        "none": 39,
+        "policy": 39
+      },
+      "policy_better_at": 23,
+      "of": 39,
+      "two_lowest_thresholds": [
+        {
+          "recall_target": 0.025,
+          "none_smota": 1.0,
+          "none_tp": 89,
+          "policy_smota": 1.0,
+          "policy_tp": 57
+        },
+        {
+          "recall_target": 0.05,
+          "none_smota": 1.0,
+          "none_tp": 164,
+          "policy_smota": 1.0,
+          "policy_tp": 146
+        }
+      ]
+    },
+    "PointRCNN (own inference), thr 0.1": {
+      "base_run": "md_k5_none_pointrcnn3c",
+      "compare_run": "md_k5_polA_pointrcnn3c",
+      "samota_published": {
+        "none": 0.7745525000000001,
+        "policy": 0.7891975,
+        "diff": 0.014644999999999908
+      },
+      "samota_excluding_two_lowest": {
+        "none": 0.7890026315789473,
+        "policy": 0.8143157894736843,
+        "diff": 0.025313157894736982
+      },
+      "thresholds_reached": {
+        "none": 34,
+        "policy": 34
+      },
+      "policy_better_at": 26,
+      "of": 34,
+      "two_lowest_thresholds": [
+        {
+          "recall_target": 0.025,
+          "none_smota": 0.0,
+          "none_tp": 0,
+          "policy_smota": 0.0,
+          "policy_tp": 0
+        },
+        {
+          "recall_target": 0.05,
+          "none_smota": 1.0,
+          "none_tp": 128,
+          "policy_smota": 0.6239,
+          "policy_tp": 53
+        }
+      ]
+    },
+    "PointRCNN (own inference), thr 0.30": {
+      "base_run": "md_k5_none_thr30_pointrcnn3c",
+      "compare_run": "md_k5_polA_thr30_pointrcnn3c",
+      "samota_published": {
+        "none": 0.7889174999999998,
+        "policy": 0.7863424999999999,
+        "diff": -0.002574999999999883
+      },
+      "samota_excluding_two_lowest": {
+        "none": 0.7778078947368419,
+        "policy": 0.8014131578947368,
+        "diff": 0.023605263157894907
+      },
+      "thresholds_reached": {
+        "none": 34,
+        "policy": 34
+      },
+      "policy_better_at": 24,
+      "of": 34,
+      "two_lowest_thresholds": [
+        {
+          "recall_target": 0.025,
+          "none_smota": 1.0,
+          "none_tp": 54,
+          "policy_smota": 0.0,
+          "policy_tp": 0
+        },
+        {
+          "recall_target": 0.05,
+          "none_smota": 1.0,
+          "none_tp": 127,
+          "policy_smota": 1.0,
+          "policy_tp": 112
+        }
+      ]
+    },
+    "PV-RCNN, thr 0.1": {
+      "base_run": "md_k5_none_pvrcnn",
+      "compare_run": "md_k5_polA_pvrcnn",
+      "samota_published": {
+        "none": 0.9009524999999998,
+        "policy": 0.9032174999999999,
+        "diff": 0.0022650000000000725
+      },
+      "samota_excluding_two_lowest": {
+        "none": 0.8997499999999998,
+        "policy": 0.9244394736842104,
+        "diff": 0.024689473684210594
+      },
+      "thresholds_reached": {
+        "none": 39,
+        "policy": 39
+      },
+      "policy_better_at": 24,
+      "of": 39,
+      "two_lowest_thresholds": [
+        {
+          "recall_target": 0.025,
+          "none_smota": 1.0,
+          "none_tp": 57,
+          "policy_smota": 0.0,
+          "policy_tp": 0
+        },
+        {
+          "recall_target": 0.05,
+          "none_smota": 0.8476,
+          "none_tp": 77,
+          "policy_smota": 1.0,
+          "policy_tp": 115
+        }
+      ]
+    },
+    "PV-RCNN, thr 0.30": {
+      "base_run": "md_k5_none_thr30_pvrcnn",
+      "compare_run": "md_k5_polA_thr30_pvrcnn",
+      "samota_published": {
+        "none": 0.9154375,
+        "policy": 0.9053350000000002,
+        "diff": -0.010102499999999792
+      },
+      "samota_excluding_two_lowest": {
+        "none": 0.9118999999999998,
+        "policy": 0.9266684210526318,
+        "diff": 0.014768421052631986
+      },
+      "thresholds_reached": {
+        "none": 38,
+        "policy": 38
+      },
+      "policy_better_at": 20,
+      "of": 38,
+      "two_lowest_thresholds": [
+        {
+          "recall_target": 0.025,
+          "none_smota": 0.9653,
+          "none_tp": 41,
+          "policy_smota": 0.0,
+          "policy_tp": 0
+        },
+        {
+          "recall_target": 0.05,
+          "none_smota": 1.0,
+          "none_tp": 155,
+          "policy_smota": 1.0,
+          "policy_tp": 99
+        }
+      ]
+    },
+    "Voxel R-CNN (Car), released thr 0.30": {
+      "base_run": "md_k5_none_voxelrcnn",
+      "compare_run": "md_k5_polA_voxelrcnn",
+      "samota_published": {
+        "none": 0.9329775000000001,
+        "policy": 0.9214525,
+        "diff": -0.011525000000000118
+      },
+      "samota_excluding_two_lowest": {
+        "none": 0.92945,
+        "policy": 0.943634210526316,
+        "diff": 0.014184210526316021
+      },
+      "thresholds_reached": {
+        "none": 39,
+        "policy": 39
+      },
+      "policy_better_at": 15,
+      "of": 39,
+      "two_lowest_thresholds": [
+        {
+          "recall_target": 0.025,
+          "none_smota": 1.0,
+          "none_tp": 97,
+          "policy_smota": 0.0,
+          "policy_tp": 0
+        },
+        {
+          "recall_target": 0.05,
+          "none_smota": 1.0,
+          "none_tp": 97,
+          "policy_smota": 1.0,
+          "policy_tp": 155
+        }
+      ]
+    }
+  }
+}

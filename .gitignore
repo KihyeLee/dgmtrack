@@ -1,0 +1,11 @@
+build/
+__pycache__/
+*.pyc
+configs/paths.json
+# detections, tracker runs, caches and checkpoints are not in the repository
+*.pth
+*.pkl
+*.npz
+*.bin
+results/runs/
+results/detections/

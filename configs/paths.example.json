@@ -1,0 +1,6 @@
+{
+  "original": "/path/to/a/checkout/that/has/AB3DMOT/as/a/sibling",
+  "nuscenes": "/path/to/nuscenes/v1.0-trainval",
+  "gt_cache": "/path/to/cache/gt",
+  "pose_cache": "/path/to/cache/poses.json"
+}
