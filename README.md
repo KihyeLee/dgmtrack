@@ -26,10 +26,22 @@ split under the official 40-recall-threshold protocol:
 | CV + greedy | TransFusion-L | **+0.0129** [+0.0104, +0.0154] | **−1058** [−1450, −720] | −33.7% |
 | Poly-MOT | VoxelNeXt | **+0.0057** [+0.0032, +0.0084] | −26 [−128, +57] | — |
 | Poly-MOT | TransFusion-L | **+0.0044** [+0.0021, +0.0075] | −153 [−268, −59] | — |
+| MCTrack | VoxelNeXt | **+0.0133** [+0.0091, +0.0180] | **−936** [−1226, −688] | — |
 
 Intervals are a paired scene bootstrap, 4,000 resamples. The AMOTA interval excludes zero in
-all four detector–tracker combinations. The identity-switch interval does not, on one of
-them, and that is reported rather than hidden. The last column is the one-second displacement
+all five detector–tracker combinations. The identity-switch interval does not, on one of
+them, and that is reported rather than hidden.
+
+**The MCTrack row is not comparable to the others and is included with that warning.** Its
+nuScenes pose filter observes the detector velocity directly, so removing that velocity means
+reverting the filter to the two-dimensional measurement the authors use on KITTI, which takes
+away an input that tracker was built around: its velocity-removed baseline loses AMOTA 0.0767
+where Poly-MOT loses 0.0195, and its identity switches go from 275 to 5923. The absolute gain
+is therefore larger while the *recovered fraction* is the smallest of the three (17%, against
+37% and 29%). What the row shows is that the gain does not vanish on a stronger tracker — not
+that the method helps more there. MCTrack also post-processes its trajectories rather than
+submitting the matched box, so it is the one configuration where AMOTP moves (−0.0026); the
+interval reaches +0.0001 and no improvement is claimed. The last column is the one-second displacement
 error of a constant-velocity predictor run on the tracker output, for objects faster than
 3 m/s — the quantity a downstream planner actually consumes, and where the effect is largest.
 
@@ -43,6 +55,9 @@ The absolute numbers behind those differences:
 | | | oracle (upper bound) | 0.6548 | 0.5637 | 472 |
 | | Poly-MOT | velocity removed | 0.6969 | 0.5927 | 472 |
 | | | **removed + proposed** | **0.7026** | **0.6052** | **446** |
+| | MCTrack | detector velocity | 0.7229 | 0.6236 | 275 |
+| | | velocity removed | 0.6462 | 0.5494 | 5923 |
+| | | **removed + proposed** | **0.6595** | **0.5581** | **4987** |
 | TransFusion-L | CV + greedy | velocity removed | 0.6469 | 0.5928 | 2053 |
 | | | **removed + proposed** | **0.6598** | **0.6029** | **995** |
 | | Poly-MOT | velocity removed | 0.6816 | 0.6150 | 568 |
@@ -153,7 +168,15 @@ Copy `configs/paths.example.json` to `configs/paths.json` and fill it in;
 | `tools/paired_bootstrap_official40.py` | paired scene bootstrap for any two runs |
 | `tools/early_track_velocity*.py` | velocity error against time since track birth |
 | `tools/validate_nusc_submission.py` | checks a submission the way the server will |
+| `tools/*polymot*`, `tools/*mctrack*`, `run_mctrack_nusc.sh` | porting the policy into the two public trackers |
 | `results/PREREGISTRATION.md` | criteria and outcomes for every experiment |
 | `docs/` | withdrawn claims, the KITTI detector-generation table |
 
-Detections, tracker outputs, caches and checkpoints are not in the repository.
+Detections, tracker outputs, caches and checkpoints are not in the repository. Neither are
+Poly-MOT and MCTrack themselves: the scripts above expect your own checkout of each and only
+add the grid velocity to it — a new track's prior and the updates while a track has at most
+two previous hits — leaving the rest of those trackers untouched. One exception is documented
+in the results above: on nuScenes, MCTrack's pose filter observes the detector velocity
+directly, so removing that velocity also means reverting the filter to the two-dimensional
+measurement its authors use on KITTI. That change is applied to the baseline and the proposal
+alike.
