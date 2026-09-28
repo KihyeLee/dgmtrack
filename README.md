@@ -14,45 +14,67 @@ near side of that crossover.
 
 ## Results
 
-nuScenes validation split, 150 scenes, official 40-recall-threshold protocol
-(devkit 1.1.11). The same detections, boxes and scores throughout — **only the
-velocity information changes**.
+The claim is a **within-row difference**: the same detections, boxes and scores, with only
+the velocity information changed. It is not a ranking of trackers — "CV + greedy" is a plain
+constant-velocity Kalman filter with greedy matching, and Poly-MOT is stronger for reasons
+that have nothing to do with this work. What the policy adds, on the nuScenes validation
+split under the official 40-recall-threshold protocol:
+
+| Tracker | Detector | ΔAMOTA ↑ | ΔIDS ↓ | Δ 1 s prediction error ↓ |
+|---|---|---|---|---|
+| CV + greedy | VoxelNeXt | **+0.0126** [+0.0077, +0.0177] | **−732** [−1023, −491] | −27.3% |
+| CV + greedy | TransFusion-L | **+0.0129** [+0.0104, +0.0154] | **−1058** [−1450, −720] | −33.7% |
+| Poly-MOT | VoxelNeXt | **+0.0057** [+0.0032, +0.0084] | −26 [−128, +57] | — |
+| Poly-MOT | TransFusion-L | **+0.0044** [+0.0021, +0.0075] | −153 [−268, −59] | — |
+
+Intervals are a paired scene bootstrap, 4,000 resamples. The AMOTA interval excludes zero in
+all four detector–tracker combinations. The identity-switch interval does not, on one of
+them, and that is reported rather than hidden. The last column is the one-second displacement
+error of a constant-velocity predictor run on the tracker output, for objects faster than
+3 m/s — the quantity a downstream planner actually consumes, and where the effect is largest.
+
+The absolute numbers behind those differences:
 
 | Detector | Tracker | Velocity | AMOTA ↑ | MOTA ↑ | IDS ↓ |
 |---|---|---|---:|---:|---:|
-| VoxelNeXt | this work | detector velocity | 0.6450 | 0.5524 | 694 |
-| VoxelNeXt | this work | removed | 0.6106 | 0.5194 | 1634 |
-| VoxelNeXt | this work | **removed + policy** | **0.6232** | **0.5388** | **902** |
-| VoxelNeXt | this work | oracle (upper bound) | 0.6548 | 0.5637 | 472 |
-| VoxelNeXt | Poly-MOT | removed | 0.6969 | 0.5927 | 472 |
-| VoxelNeXt | Poly-MOT | **removed + policy** | **0.7026** | **0.6052** | **446** |
-| TransFusion-L | this work | removed | 0.6469 | 0.5928 | 2053 |
-| TransFusion-L | this work | **removed + policy** | **0.6598** | **0.6029** | **995** |
+| VoxelNeXt | CV + greedy | detector velocity | 0.6450 | 0.5524 | 694 |
+| | | velocity removed | 0.6106 | 0.5194 | 1634 |
+| | | **removed + proposed** | **0.6232** | **0.5388** | **902** |
+| | | oracle (upper bound) | 0.6548 | 0.5637 | 472 |
+| | Poly-MOT | velocity removed | 0.6969 | 0.5927 | 472 |
+| | | **removed + proposed** | **0.7026** | **0.6052** | **446** |
+| TransFusion-L | CV + greedy | velocity removed | 0.6469 | 0.5928 | 2053 |
+| | | **removed + proposed** | **0.6598** | **0.6029** | **995** |
+| | Poly-MOT | velocity removed | 0.6816 | 0.6150 | 568 |
+| | | **removed + proposed** | **0.6860** | **0.6233** | **415** |
 
-Paired scene bootstrap (4,000 resamples), AMOTA difference of the policy against
-the velocity-removed run of the same row: +0.0126 [+0.0077, +0.0177],
-+0.0057 [+0.0032, +0.0084] and +0.0129 [+0.0104, +0.0154] — none of the four
-detector-tracker combinations has an interval containing zero.
+The oracle injects the ground-truth velocity through the same measurement path and bounds
+what any velocity source can give this pipeline; the policy recovers 28–30% of that headroom.
 
-KITTI tracking validation split (11 sequences, 3,904 scans), 2 Hz, Car, detections
-regenerated from three released OpenPCDet checkpoints. Every tracker parameter is
-the nuScenes value, unchanged.
+On KITTI, whose detectors report no velocity at all, the detections were regenerated from
+three released OpenPCDet checkpoints spanning Car AP@R11 78.70 to 84.54, with every tracker
+parameter left at its nuScenes value:
 
-| Detector | Car AP@R11 | MOTA, no velocity → + policy | IDS, no velocity → + policy |
+| Detector | Car AP@R11 | Car MOTA, no velocity → + proposed | IDS, no velocity → + proposed |
 |---|---:|---|---|
-| PointRCNN | 78.70 | 0.6739 → 0.7275 | 97 → 33 |
-| PV-RCNN | 83.61 | 0.7693 → 0.8122 | 34 → 14 |
-| Voxel R-CNN (Car) | 84.54 | 0.7828 → 0.8334 | 53 → 29 |
+| PointRCNN | 78.70 | 0.6739 → **0.7275** | 97 → **33** |
+| PV-RCNN | 83.61 | 0.7693 → **0.8122** | 34 → **14** |
+| Voxel R-CNN (Car) | 84.54 | 0.7828 → **0.8334** | 53 → **29** |
 
-Downstream: a constant-velocity predictor run on the tracker output lowers its
-one-second displacement error by 23–34% for objects faster than 3 m/s, across four
-detectors.
+The identity and accuracy gains do not depend on the detector generation. The
+recall-averaged sAMOTA does, and `results/kitti/SAMOTA_THRESHOLD_DIAG.json` shows why: its
+lowest recall point contributes zero when a single operating point has no true positive.
 
-What the method does **not** do: it cannot improve box localisation (the tracker
-submits the matched detection box verbatim), it costs about 20 ms per nuScenes
-frame on one CPU thread, and at a low detection-confidence floor it makes
-pedestrian identities worse on KITTI. `docs/WITHDRAWN_CLAIMS.md` lists every claim
-an earlier draft made that the evidence did not support.
+The AMOTA gain is small, and the paper says so. Recall-averaged metrics add misses, false
+positives and identity switches with equal weight, and identity switches are a small part of
+the total, so a method that only reduces them cannot move such a metric much. That is why the
+downstream prediction error is reported alongside.
+
+What the method does **not** do: it cannot improve box localisation (the tracker submits the
+matched detection box verbatim), it costs about 20 ms per nuScenes frame on one CPU thread,
+and at a low detection-confidence floor it makes pedestrian identities worse on KITTI.
+`docs/WITHDRAWN_CLAIMS.md` lists every claim an earlier draft made that the evidence did not
+support.
 
 ## Judgement criteria and their outcomes
 
