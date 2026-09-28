@@ -1,0 +1,43 @@
+{
+  "grid_run": "mg_grid_report",
+  "floor": 0.5,
+  "estimator": "kappa = median(NEES_Rv) / (2 ln 2)",
+  "overall": {
+    "n": 72794,
+    "median_nees_Rv": 0.041011841290581025,
+    "mean_nees_Rv": 0.9413413729940526,
+    "kappa_median": 0.029583790023823237,
+    "median_nees_S": 0.1630249308781579
+  },
+  "kappa": 0.029583790023823237,
+  "report_only": {
+    "age_0_2": {
+      "n": 10660,
+      "median_nees_Rv": 0.16869704859393952,
+      "mean_nees_Rv": 3.1031761976043026,
+      "kappa_median": 0.12168919770954052,
+      "median_nees_S": 0.4983871128705508
+    },
+    "age_ge3": {
+      "n": 62134,
+      "median_nees_Rv": 0.034204130849966374,
+      "mean_nees_Rv": 0.5704468670819068,
+      "kappa_median": 0.024673064977581847,
+      "median_nees_S": 0.1408589705155608
+    },
+    "moving_ge1": {
+      "n": 22167,
+      "median_nees_Rv": 0.287122408122253,
+      "mean_nees_Rv": 1.5031766374000162,
+      "kappa_median": 0.2071150371630357,
+      "median_nees_S": 0.7905833398795764
+    },
+    "static_lt1": {
+      "n": 50627,
+      "median_nees_Rv": 0.020350456464384284,
+      "mean_nees_Rv": 0.6953421570403718,
+      "kappa_median": 0.014679751310496978,
+      "median_nees_S": 0.08988885779462118
+    }
+  }
+}
